@@ -1,0 +1,91 @@
+{
+  "name": "jsoneditor-for-vscode",
+  "displayName": "JSON Tree (jsoneditor)",
+  "description": "View the active JSON file as a collapsible tree with jsoneditor.",
+  "version": "0.1.0",
+  "publisher": "vasily",
+  "icon": "media/icon.png",
+  "homepage": "https://github.com/Single-Dancer/jsoneditor-for-vscode#readme",
+  "bugs": {
+    "url": "https://github.com/Single-Dancer/jsoneditor-for-vscode/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Single-Dancer/jsoneditor-for-vscode.git"
+  },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "keywords": [
+    "json",
+    "tree",
+    "viewer",
+    "jsoneditor"
+  ],
+  "license": "Apache-2.0",
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished",
+    "onView:jsoneditor.treeView"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "jsoneditor.open",
+        "title": "打开 JSON 树形视图",
+        "category": "JSON Editor",
+        "icon": "$(list-tree)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "jsoneditor",
+          "title": "JSON Tree",
+          "icon": "media/activity-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "jsoneditor": [
+        {
+          "type": "webview",
+          "id": "jsoneditor.treeView",
+          "name": "JSON Tree"
+        }
+      ]
+    },
+    "menus": {
+      "editor/title": [
+        {
+          "command": "jsoneditor.open",
+          "when": "resourceLangId == json",
+          "group": "navigation@100"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "tsc --noEmit && node scripts/build.mjs",
+    "package": "vsce package",
+    "package:release": "bumpp package.json --no-commit --no-tag --no-push --execute \"pnpm package\"",
+    "vscode:prepublish": "tsc --noEmit && node scripts/build.mjs --production"
+  },
+  "devDependencies": {
+    "@types/json-source-map": "^0.6.0",
+    "@types/jsoneditor": "^9.9.6",
+    "@types/node": "^20.19.43",
+    "@types/vscode": "1.90.0",
+    "@vscode/vsce": "^3.9.2",
+    "bumpp": "^10.4.1",
+    "esbuild": "^0.25.12",
+    "json-source-map": "^0.6.1",
+    "jsoneditor": "^10.4.3",
+    "typescript": "^5.9.3"
+  }
+}

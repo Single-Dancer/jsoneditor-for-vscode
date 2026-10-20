@@ -1,0 +1,14 @@
+.vscode/**
+src/**
+scripts/**
+node_modules/**
+test/**
+media/screenshot-*.png
+tsconfig.json
+package-lock.json
+pnpm-lock.yaml
+pnpm-workspace.yaml
+*.vsix
+.gitignore
+**/*.map
+.playwright-cli/**

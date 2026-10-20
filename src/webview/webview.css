@@ -1,0 +1,745 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--vscode-editor-background);
+  color: var(--vscode-editor-foreground);
+}
+
+body {
+  font-family: var(--vscode-font-family);
+}
+
+#editor {
+  height: 100%;
+}
+
+#state[hidden] {
+  display: none;
+}
+
+/*
+ * jsoneditor ships a light theme. Every surface below is mapped onto the
+ * current VS Code theme so the same stylesheet works in light and dark mode.
+ */
+.jsoneditor {
+  border: 0;
+  background: var(--vscode-editor-background);
+  color: var(--vscode-editor-foreground);
+}
+
+.jsoneditor-menu {
+  position: relative;
+  color: var(--vscode-editor-foreground);
+  background: var(--vscode-editor-background);
+  border-bottom: 1px solid var(--vscode-panel-border, transparent);
+}
+
+.jsoneditor-menu > button:hover,
+.jsoneditor-menu > button:focus,
+.jsoneditor-menu > .jsoneditor-modes > button:hover,
+.jsoneditor-menu > .jsoneditor-modes > button:focus {
+  background-color: rgba(255, 255, 255, 0.24);
+  border-color: transparent;
+}
+
+.jsoneditor-menu > button.jsoneditor-readonly-toggle {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: auto;
+  padding: 0 8px;
+  background-image: none;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.jsoneditor-menu > button.jsoneditor-diff-toggle {
+  position: absolute;
+  top: 4px;
+  right: 64px;
+  width: auto;
+  padding: 0 8px;
+  background-image: none;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.jsoneditor-menu > button.jsoneditor-readonly-toggle,
+.jsoneditor-menu > button.jsoneditor-diff-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 26px;
+  color: var(--vscode-button-foreground, #ffffff);
+  background-color: var(--vscode-button-background, #0e639c);
+  border-color: transparent;
+  opacity: 1;
+}
+
+.jsoneditor-menu > button.jsoneditor-readonly-toggle:hover,
+.jsoneditor-menu > button.jsoneditor-diff-toggle:hover {
+  background-color: var(--vscode-button-hoverBackground, #1177bb);
+}
+
+.jsoneditor-search {
+  align-items: center;
+  right: 124px;
+}
+
+.jsoneditor-menu > button.jsoneditor-readonly-toggle.is-readonly {
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+body.vscode-light .jsoneditor-menu > button:not(.jsoneditor-readonly-toggle):not(.jsoneditor-diff-toggle),
+body.vscode-light .jsoneditor-menu > .jsoneditor-modes > button,
+body.vscode-light .jsoneditor-search button,
+body.vscode-high-contrast-light .jsoneditor-menu > button:not(.jsoneditor-readonly-toggle):not(.jsoneditor-diff-toggle),
+body.vscode-high-contrast-light .jsoneditor-menu > .jsoneditor-modes > button,
+body.vscode-high-contrast-light .jsoneditor-search button {
+  filter: invert(1);
+}
+
+.jsoneditor-navigation-bar {
+  color: var(--vscode-descriptionForeground);
+  background: var(--vscode-editor-background);
+  border-bottom: 1px solid var(--vscode-panel-border, transparent);
+}
+
+.jsoneditor-treepath span.jsoneditor-treepath-element:hover,
+.jsoneditor-treepath span.jsoneditor-treepath-seperator:hover {
+  color: var(--vscode-textLink-foreground);
+  text-decoration: underline;
+}
+
+.jsoneditor-search .jsoneditor-frame {
+  background: var(--vscode-input-background);
+  border: 1px solid var(--vscode-input-border, transparent);
+}
+
+.jsoneditor-search input {
+  color: var(--vscode-input-foreground);
+  background: transparent;
+}
+
+.jsoneditor-search input::placeholder {
+  color: var(--vscode-input-placeholderForeground);
+}
+
+.jsoneditor-results {
+  color: var(--vscode-descriptionForeground);
+}
+
+.jsoneditor-menu a.jsoneditor-poweredBy {
+  color: var(--vscode-descriptionForeground);
+}
+
+/* Mode picker popup */
+.jsoneditor-contextmenu .jsoneditor-menu {
+  color: var(--vscode-menu-foreground);
+  background: var(--vscode-menu-background);
+  border-color: var(--vscode-menu-border, var(--vscode-panel-border));
+  box-shadow: 0 2px 8px var(--vscode-widget-shadow);
+}
+
+.jsoneditor-contextmenu .jsoneditor-menu button {
+  color: var(--vscode-menu-foreground);
+}
+
+.jsoneditor-contextmenu .jsoneditor-menu button:hover,
+.jsoneditor-contextmenu .jsoneditor-menu button:focus {
+  color: var(--vscode-menu-selectionForeground);
+  background: var(--vscode-menu-selectionBackground);
+}
+
+.jsoneditor-contextmenu .jsoneditor-menu li button.jsoneditor-selected,
+.jsoneditor-contextmenu .jsoneditor-menu li button.jsoneditor-selected:hover,
+.jsoneditor-contextmenu .jsoneditor-menu li button.jsoneditor-selected:focus {
+  color: var(--vscode-menu-selectionForeground);
+  background: var(--vscode-menu-selectionBackground);
+}
+
+.jsoneditor-contextmenu .jsoneditor-separator {
+  border-top-color: var(--vscode-menu-separatorBackground, var(--vscode-panel-border));
+}
+
+body.vscode-dark .jsoneditor-contextmenu .jsoneditor-icon,
+body.vscode-dark .jsoneditor-contextmenu .jsoneditor-expand,
+body.vscode-high-contrast:not(.vscode-high-contrast-light) .jsoneditor-contextmenu .jsoneditor-icon,
+body.vscode-high-contrast:not(.vscode-high-contrast-light) .jsoneditor-contextmenu .jsoneditor-expand {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Code mode uses Ace, which has its own light theme. */
+body .ace-jsoneditor.ace_editor,
+body .ace-jsoneditor .ace_scroller {
+  color: var(--vscode-editor-foreground);
+  background-color: var(--vscode-editor-background);
+}
+
+body .ace-jsoneditor .ace_gutter {
+  color: var(--vscode-editorLineNumber-foreground);
+  background: var(--vscode-editorGutter-background, var(--vscode-editor-background));
+  border-right: 1px solid var(--vscode-editorGroup-border, transparent);
+}
+
+body .ace-jsoneditor .ace_print-margin {
+  background: var(--vscode-editorIndentGuide-background);
+}
+
+body .ace-jsoneditor .ace_text-layer {
+  color: var(--vscode-editor-foreground);
+}
+
+body .ace-jsoneditor .ace_cursor {
+  border-left-color: var(--vscode-editorCursor-foreground);
+}
+
+body .ace-jsoneditor .ace_marker-layer .ace_selection {
+  background: var(--vscode-editor-selectionBackground);
+}
+
+body .ace-jsoneditor .ace_marker-layer .ace_active-line {
+  background: var(--vscode-editor-lineHighlightBackground);
+}
+
+body .ace-jsoneditor .ace_gutter-active-line {
+  background: var(--vscode-editor-lineHighlightBackground);
+}
+
+body .ace-jsoneditor .ace_marker-layer .ace_bracket {
+  border-color: var(--vscode-editorBracketMatch-border, transparent);
+}
+
+body .ace-jsoneditor .ace_marker-layer .ace_step {
+  background: var(--vscode-editor-findMatchHighlightBackground);
+}
+
+body .ace-jsoneditor .ace_invisible {
+  color: var(--vscode-editorWhitespace-foreground);
+}
+
+body .ace-jsoneditor .ace_indent-guide {
+  background: none;
+  border-right: 1px solid var(--vscode-editorIndentGuide-background);
+}
+
+body .ace-jsoneditor .ace_variable {
+  color: var(--vscode-symbolIcon-propertyForeground, var(--vscode-editor-foreground));
+}
+
+body .ace-jsoneditor .ace_string {
+  color: var(--vscode-symbolIcon-stringForeground, #006000);
+}
+
+body .ace-jsoneditor .ace_constant.ace_numeric {
+  color: var(--vscode-symbolIcon-numberForeground, #b32d1b);
+}
+
+body .ace-jsoneditor .ace_constant.ace_language {
+  color: var(--vscode-symbolIcon-booleanForeground, #b35c00);
+}
+
+body .ace-jsoneditor .ace_keyword,
+body .ace-jsoneditor .ace_keyword.ace_operator,
+body .ace-jsoneditor .ace_meta {
+  color: var(--vscode-editor-foreground);
+}
+
+body .ace-jsoneditor .ace_comment {
+  color: var(--vscode-descriptionForeground);
+}
+
+body .ace-jsoneditor .ace_invalid {
+  color: var(--vscode-errorForeground);
+  background-color: var(--vscode-inputValidation-errorBackground);
+}
+
+textarea.jsoneditor-text {
+  color: var(--vscode-editor-foreground);
+  background-color: var(--vscode-editor-background);
+  font-family: var(--vscode-editor-font-family);
+  font-size: var(--vscode-editor-font-size);
+}
+
+.jsoneditor-statusbar {
+  color: var(--vscode-descriptionForeground);
+  background: var(--vscode-editor-background);
+  border-top: 1px solid var(--vscode-panel-border, transparent);
+}
+
+pre.jsoneditor-preview {
+  color: var(--vscode-editor-foreground);
+  background: var(--vscode-editor-background);
+}
+
+div.jsoneditor-tree {
+  background: var(--vscode-editor-background);
+}
+
+div.jsoneditor-tree button.jsoneditor-button:focus {
+  background-color: var(--vscode-toolbar-hoverBackground);
+  outline: 1px solid var(--vscode-focusBorder);
+}
+
+body.vscode-dark div.jsoneditor-tree button.jsoneditor-button,
+body.vscode-high-contrast:not(.vscode-high-contrast-light) div.jsoneditor-tree button.jsoneditor-button {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+.jsoneditor-readonly .jsoneditor-mode-tree table.jsoneditor-tree > tbody > tr > td:nth-child(1),
+.jsoneditor-readonly .jsoneditor-mode-tree table.jsoneditor-tree > tbody > tr > td:nth-child(2) {
+  display: none;
+}
+
+div.jsoneditor-field,
+div.jsoneditor-value,
+div.jsoneditor td,
+div.jsoneditor th,
+div.jsoneditor textarea,
+pre.jsoneditor-preview,
+.jsoneditor-schema-error,
+.jsoneditor-popover {
+  color: var(--vscode-editor-foreground);
+  font-family: var(--vscode-editor-font-family);
+  font-size: var(--vscode-editor-font-size);
+}
+
+div.jsoneditor-field {
+  color: var(--vscode-symbolIcon-propertyForeground, var(--vscode-editor-foreground));
+}
+
+div.jsoneditor-value.jsoneditor-string {
+  color: var(--vscode-symbolIcon-stringForeground, #006000);
+}
+
+div.jsoneditor-value.jsoneditor-number {
+  color: var(--vscode-symbolIcon-numberForeground, #b32d1b);
+}
+
+div.jsoneditor-value.jsoneditor-boolean {
+  color: var(--vscode-symbolIcon-booleanForeground, #b35c00);
+}
+
+div.jsoneditor-value.jsoneditor-null {
+  color: var(--vscode-symbolIcon-constantForeground, #004ed0);
+}
+
+div.jsoneditor-value.jsoneditor-invalid,
+div.jsoneditor-value.jsoneditor-color-value,
+div.jsoneditor-readonly,
+div.jsoneditor-default,
+div.jsoneditor td.jsoneditor-separator {
+  color: var(--vscode-descriptionForeground);
+}
+
+div.jsoneditor-value.jsoneditor-url,
+a.jsoneditor-value.jsoneditor-url {
+  color: var(--vscode-textLink-foreground);
+}
+
+div.jsoneditor-empty {
+  border-color: var(--vscode-editorIndentGuide-background, transparent);
+}
+
+div.jsoneditor-tree div.jsoneditor-show-more {
+  color: var(--vscode-badge-foreground);
+  background: var(--vscode-badge-background);
+}
+
+div.jsoneditor-tree div.jsoneditor-show-more a {
+  color: var(--vscode-badge-foreground);
+}
+
+div.jsoneditor-tree div.jsoneditor-date {
+  color: var(--vscode-badge-foreground);
+  background: var(--vscode-badge-background);
+}
+
+tr.jsoneditor-highlight {
+  background-color: var(--vscode-editor-findMatchHighlightBackground);
+}
+
+tr.jsoneditor-selected {
+  background-color: var(--vscode-editor-selectionBackground);
+}
+
+div.jsoneditor-field.jsoneditor-highlight,
+div.jsoneditor-value.jsoneditor-highlight {
+  color: var(--vscode-editor-foreground);
+  background-color: var(--vscode-editor-findMatchHighlightBackground);
+  border-color: var(--vscode-editor-findMatchBorder, transparent);
+}
+
+div.jsoneditor-field[contenteditable="true"]:hover,
+div.jsoneditor-value[contenteditable="true"]:hover {
+  background-color: var(--vscode-editor-hoverHighlightBackground);
+  border-color: transparent;
+}
+
+div.jsoneditor-field.jsoneditor-highlight-active,
+div.jsoneditor-value.jsoneditor-highlight-active,
+div.jsoneditor-readonly.jsoneditor-highlight-active {
+  color: var(--vscode-editor-selectionForeground, #ffffff) !important;
+  background-color: var(--vscode-editor-selectionBackground, #264f78) !important;
+  border-radius: 2px;
+  outline: 2px solid var(--vscode-focusBorder, #007fd4);
+  outline-offset: 1px;
+  font-weight: 700;
+}
+
+.banner {
+  position: absolute;
+  top: 43px;
+  right: 12px;
+  left: 12px;
+  z-index: 20;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  color: var(--vscode-editor-foreground);
+  background: var(--vscode-inputValidation-errorBackground);
+  border: 1px solid var(--vscode-inputValidation-errorBorder);
+  border-radius: 2px;
+  box-shadow: 0 2px 8px var(--vscode-widget-shadow);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.banner[hidden] {
+  display: none;
+}
+
+.banner[data-kind="info"] {
+  background: var(--vscode-inputValidation-infoBackground);
+  border-color: var(--vscode-inputValidation-infoBorder);
+}
+
+.banner button {
+  flex: none;
+  padding: 0 4px;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.state {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--vscode-editor-background);
+}
+
+.state-card {
+  max-width: 720px;
+}
+
+.state-mark {
+  color: var(--vscode-errorForeground);
+  font-family: var(--vscode-editor-font-family);
+  font-size: 40px;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.state h1 {
+  margin: 12px 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.state p {
+  margin: 0;
+  color: var(--vscode-descriptionForeground);
+  font-family: var(--vscode-editor-font-family);
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  user-select: text;
+}
+
+.diff-dialog {
+  box-sizing: border-box;
+  width: min(1100px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100vh - 32px);
+  padding: 0;
+  color: var(--vscode-foreground);
+  background: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-panel-border, transparent);
+  border-radius: 4px;
+  box-shadow: 0 8px 24px var(--vscode-widget-shadow);
+}
+
+.diff-dialog:has(.compare-view:not([hidden])) {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.diff-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.diff-dialog form {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+}
+
+.diff-dialog form[hidden],
+.compare-view[hidden] {
+  display: none;
+}
+
+.diff-dialog h2 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.diff-error {
+  margin: 0;
+  color: var(--vscode-errorForeground);
+  font-size: 12px;
+}
+
+.diff-dialog label {
+  color: var(--vscode-descriptionForeground);
+  font-size: 12px;
+}
+
+.diff-dialog textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 240px;
+  resize: vertical;
+  padding: 8px;
+  color: var(--vscode-input-foreground);
+  background: var(--vscode-input-background);
+  border: 1px solid var(--vscode-input-border, var(--vscode-panel-border));
+  font-family: var(--vscode-editor-font-family);
+  font-size: var(--vscode-editor-font-size);
+}
+
+.diff-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.diff-actions button {
+  padding: 4px 12px;
+  color: var(--vscode-button-foreground);
+  background: var(--vscode-button-background);
+  border: 0;
+  cursor: pointer;
+}
+
+.diff-actions button:hover {
+  background: var(--vscode-button-hoverBackground);
+}
+
+.diff-actions button.secondary {
+  color: var(--vscode-button-secondaryForeground);
+  background: var(--vscode-button-secondaryBackground);
+}
+
+.diff-actions button.secondary:hover {
+  background: var(--vscode-button-secondaryHoverBackground);
+}
+
+.compare-view {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.compare-header {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--vscode-editor-background);
+  border-bottom: 1px solid var(--vscode-panel-border, transparent);
+}
+
+.compare-header h2 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.compare-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.compare-controls span {
+  min-width: 48px;
+  color: var(--vscode-descriptionForeground);
+  font-family: var(--vscode-editor-font-family);
+  font-size: 12px;
+  text-align: center;
+}
+
+.compare-controls button {
+  padding: 4px 9px;
+  color: var(--vscode-button-foreground);
+  background: var(--vscode-button-background);
+  border: 0;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.compare-controls button:hover {
+  background: var(--vscode-button-hoverBackground);
+}
+
+.compare-controls button.secondary {
+  color: var(--vscode-button-secondaryForeground);
+  background: var(--vscode-button-secondaryBackground);
+}
+
+.compare-controls button.secondary:hover {
+  background: var(--vscode-button-secondaryHoverBackground);
+}
+
+.compare-panels {
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.compare-panel {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.compare-panel + .compare-panel {
+  border-left: 1px solid var(--vscode-panel-border, transparent);
+}
+
+.compare-panel h3 {
+  flex: none;
+  margin: 0;
+  padding: 8px 12px;
+  color: var(--vscode-descriptionForeground);
+  background: var(--vscode-editor-background);
+  border-bottom: 1px solid var(--vscode-panel-border, transparent);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.compare-panel > div {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.compare-panel .jsoneditor {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.compare-panel .jsoneditor-menu,
+.compare-panel .jsoneditor-navigation-bar {
+  flex-shrink: 0;
+}
+
+.compare-panel div.jsoneditor-tree {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.compare-panel .jsoneditor-search {
+  right: 4px;
+}
+
+.jsoneditor-diff-changed {
+  background-color: var(--vscode-diffEditor-removedTextBackground, rgba(255, 80, 80, 0.16));
+}
+
+.compare-panel + .compare-panel .jsoneditor-diff-changed {
+  background-color: var(--vscode-diffEditor-insertedTextBackground, rgba(80, 200, 120, 0.16));
+}
+
+@media (max-width: 430px) {
+  .jsoneditor-menu {
+    height: 64px;
+  }
+
+  div.jsoneditor-outer.has-main-menu-bar.has-nav-bar {
+    margin-top: -90px;
+    padding-top: 90px;
+  }
+
+  .jsoneditor-search {
+    top: 38px;
+    right: 100px;
+    left: 4px;
+  }
+
+  .jsoneditor-menu > button.jsoneditor-readonly-toggle,
+  .jsoneditor-menu > button.jsoneditor-diff-toggle {
+    top: 36px;
+  }
+
+  .jsoneditor-search .jsoneditor-frame {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .jsoneditor-search input {
+    box-sizing: border-box;
+    flex: 1;
+    width: auto;
+    min-width: 0;
+  }
+
+  .jsoneditor-menu > .jsoneditor-modes > button {
+    padding-right: 4px;
+    padding-left: 4px;
+    font-size: 12px;
+  }
+
+  .compare-panels {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .compare-panel + .compare-panel {
+    border-top: 1px solid var(--vscode-panel-border, transparent);
+    border-left: 0;
+  }
+}

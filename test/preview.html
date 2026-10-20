@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON Tree preview</title>
+    <style>
+      body.vscode-dark {
+        --vscode-editor-background: #1e1e1e;
+        --vscode-editor-foreground: #d4d4d4;
+        --vscode-panel-border: #3c3c3c;
+        --vscode-descriptionForeground: #9d9d9d;
+        --vscode-textLink-foreground: #4daafc;
+        --vscode-input-background: #313131;
+        --vscode-input-foreground: #cccccc;
+        --vscode-input-border: #3c3c3c;
+        --vscode-input-placeholderForeground: #818181;
+        --vscode-toolbar-hoverBackground: rgba(90, 93, 94, 0.31);
+        --vscode-focusBorder: #0078d4;
+        --vscode-editor-selectionBackground: #264f78;
+        --vscode-editor-findMatchBackground: #9e6a03;
+        --vscode-editor-findMatchHighlightBackground: rgba(234, 92, 0, 0.33);
+        --vscode-editor-findMatchBorder: #f8c51c;
+        --vscode-badge-background: #616161;
+        --vscode-badge-foreground: #f8f8f8;
+        --vscode-symbolIcon-propertyForeground: #cccccc;
+        --vscode-symbolIcon-stringForeground: #ce9178;
+        --vscode-symbolIcon-numberForeground: #b5cea8;
+        --vscode-symbolIcon-booleanForeground: #569cd6;
+        --vscode-symbolIcon-constantForeground: #4fc1ff;
+        --vscode-editorIndentGuide-background: #404040;
+        --vscode-errorForeground: #f85149;
+        --vscode-editor-font-family: Menlo, Monaco, "Courier New", monospace;
+        --vscode-editor-font-size: 13px;
+        --vscode-font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        --vscode-menu-background: #252526;
+        --vscode-menu-foreground: #cccccc;
+        --vscode-menu-border: #454545;
+        --vscode-menu-separatorBackground: #454545;
+        --vscode-menu-selectionBackground: #0078d4;
+        --vscode-menu-selectionForeground: #ffffff;
+        --vscode-widget-shadow: rgba(0, 0, 0, 0.36);
+        --vscode-inputValidation-errorBackground: #5a1d1d;
+        --vscode-inputValidation-errorBorder: #be1100;
+        --vscode-inputValidation-infoBackground: #063b49;
+        --vscode-inputValidation-infoBorder: #007acc;
+        --vscode-editorGutter-background: #1e1e1e;
+        --vscode-editorLineNumber-foreground: #858585;
+        --vscode-editorCursor-foreground: #aeafad;
+        --vscode-editorWhitespace-foreground: #3b3b3b;
+        --vscode-editorBracketMatch-border: #888888;
+        --vscode-editor-lineHighlightBackground: #2a2d2e;
+        --vscode-editorGroup-border: #444444;
+      }
+
+      body.vscode-light {
+        --vscode-editor-background: #ffffff;
+        --vscode-editor-foreground: #3b3b3b;
+        --vscode-panel-border: #e5e5e5;
+        --vscode-descriptionForeground: #717171;
+        --vscode-textLink-foreground: #006ab1;
+        --vscode-input-background: #ffffff;
+        --vscode-input-foreground: #616161;
+        --vscode-input-border: #cecece;
+        --vscode-input-placeholderForeground: #767676;
+        --vscode-toolbar-hoverBackground: rgba(184, 184, 184, 0.31);
+        --vscode-focusBorder: #005fb8;
+        --vscode-editor-selectionBackground: #add6ff;
+        --vscode-editor-findMatchBackground: #a8ac94;
+        --vscode-editor-findMatchHighlightBackground: rgba(234, 92, 0, 0.33);
+        --vscode-editor-findMatchBorder: #f8c51c;
+        --vscode-badge-background: #cccccc;
+        --vscode-badge-foreground: #3b3b3b;
+        --vscode-symbolIcon-propertyForeground: #0451a5;
+        --vscode-symbolIcon-stringForeground: #a31515;
+        --vscode-symbolIcon-numberForeground: #098658;
+        --vscode-symbolIcon-booleanForeground: #0000ff;
+        --vscode-symbolIcon-constantForeground: #0070c1;
+        --vscode-editorIndentGuide-background: #d3d3d3;
+        --vscode-errorForeground: #a1260d;
+        --vscode-editor-font-family: Menlo, Monaco, "Courier New", monospace;
+        --vscode-editor-font-size: 13px;
+        --vscode-font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        --vscode-menu-background: #ffffff;
+        --vscode-menu-foreground: #3b3b3b;
+        --vscode-menu-border: #e5e5e5;
+        --vscode-menu-separatorBackground: #d4d4d4;
+        --vscode-menu-selectionBackground: #0078d4;
+        --vscode-menu-selectionForeground: #ffffff;
+        --vscode-widget-shadow: rgba(0, 0, 0, 0.16);
+        --vscode-inputValidation-errorBackground: #f2dede;
+        --vscode-inputValidation-errorBorder: #be1100;
+        --vscode-inputValidation-infoBackground: #d6ecf2;
+        --vscode-inputValidation-infoBorder: #007acc;
+        --vscode-editorGutter-background: #ffffff;
+        --vscode-editorLineNumber-foreground: #237893;
+        --vscode-editorCursor-foreground: #000000;
+        --vscode-editorWhitespace-foreground: #d3d3d3;
+        --vscode-editorBracketMatch-border: #b9b9b9;
+        --vscode-editor-lineHighlightBackground: #f3f3f3;
+        --vscode-editorGroup-border: #e7e7e7;
+      }
+    </style>
+    <link rel="stylesheet" href="../dist/webview.css" />
+  </head>
+  <body>
+    <main id="editor" aria-label="JSON 编辑器"></main>
+    <div id="banner" class="banner" role="alert" hidden>
+      <span id="banner-message"></span>
+      <button id="banner-close" type="button" title="关闭">&#10005;</button>
+    </div>
+    <section id="state" class="state" aria-live="polite" hidden>
+      <div class="state-card">
+        <div class="state-mark" aria-hidden="true">{ }</div>
+        <h1 id="state-title">无法显示 JSON</h1>
+        <p id="state-message"></p>
+      </div>
+    </section>
+    <dialog id="diff-dialog" class="diff-dialog" aria-labelledby="diff-title">
+      <form id="diff-form">
+        <h2 id="diff-title">与基准 JSON 比较</h2>
+        <label for="diff-baseline">粘贴基准 JSON</label>
+        <textarea id="diff-baseline" spellcheck="false"></textarea>
+        <p id="diff-error" class="diff-error" role="alert" hidden></p>
+        <div class="diff-actions">
+          <button id="diff-cancel" class="secondary" type="button">取消</button>
+          <button type="submit">比较</button>
+        </div>
+      </form>
+      <section id="compare-view" class="compare-view" hidden>
+        <header class="compare-header">
+          <h2>JSON Compare</h2>
+          <nav class="compare-controls" aria-label="差异导航">
+            <button id="compare-previous" type="button" title="上一个差异">
+              上一个
+            </button>
+            <span id="compare-position" aria-live="polite">0 / 0</span>
+            <button id="compare-next" type="button" title="下一个差异">
+              下一个
+            </button>
+            <button id="compare-toggle" class="secondary" type="button">
+              差异：显示
+            </button>
+            <button id="compare-close" type="button">关闭</button>
+          </nav>
+        </header>
+        <div class="compare-panels">
+          <section class="compare-panel">
+            <h3>基准 JSON</h3>
+            <div id="compare-baseline-editor"></div>
+          </section>
+          <section class="compare-panel">
+            <h3>当前 JSON</h3>
+            <div id="compare-current-editor"></div>
+          </section>
+        </div>
+      </section>
+    </dialog>
+    <script>
+      document.body.className =
+        'vscode-' +
+        (new URLSearchParams(location.search).get('theme') || 'dark')
+
+      const params = new URLSearchParams(location.search)
+      const sample = {
+        name: 'jsoneditor-for-vscode',
+        displayName: 'JSON Tree',
+        version: '0.0.1',
+        enabled: true,
+        rating: 4.9,
+        license: null,
+        capabilities: {
+          treeView: true,
+          darkMode: true,
+          titleBar: true,
+          statusBar: true
+        },
+        keywords: ['json', 'tree', 'viewer', 'jsoneditor'],
+        contributors: [
+          { name: 'Jos de Jong', role: 'jsoneditor' },
+          { name: 'You', role: 'VS Code extension' }
+        ],
+        settings: {
+          theme: 'auto',
+          fontSize: 13,
+          wordWrap: false,
+          maxDepth: 100
+        },
+        scripts: {
+          build: 'node scripts/build.mjs',
+          check: 'tsc --noEmit && node scripts/build.mjs',
+          package: 'vsce package'
+        }
+      }
+
+      const sampleText = JSON.stringify(sample, null, 2) + '\n'
+      window.__messages = []
+      window.__state = { mode: params.get('mode') || undefined }
+
+      window.acquireVsCodeApi = () => ({
+        postMessage(message) {
+          window.__messages.push(message)
+          if (message.type === 'ready') {
+            setTimeout(() => {
+              window.postMessage(
+                params.get('error')
+                  ? {
+                      type: 'error',
+                      uri: 'file:///workspace/broken.json',
+                      fileName: 'broken.json',
+                      text: '{ invalid',
+                      message:
+                        'JSON 解析失败：Unexpected token } in JSON at position 42'
+                    }
+                  : {
+                      type: 'render',
+                      uri: 'file:///workspace/package.json',
+                      json: sample,
+                      text: sampleText,
+                      fileName: 'package.json'
+                    },
+                '*'
+              )
+            }, 10)
+          }
+        },
+        getState() {
+          return window.__state
+        },
+        setState(state) {
+          window.__state = state
+        }
+      })
+    </script>
+    <script src="../dist/webview.js"></script>
+  </body>
+</html>
